@@ -1,0 +1,32 @@
+name: Telegram Bot (Scheduled)
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # runs every 5 minutes
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run once
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TOKEN_ADDRESS: ${{ secrets.TOKEN_ADDRESS }}
+          NETWORK: ${{ secrets.NETWORK }}
+          TOKEN_NAME: ${{ secrets.TOKEN_NAME }}
+          TOKEN_SYMBOL: ${{ secrets.TOKEN_SYMBOL }}
+          RUN_ONCE: "1"
+        run: python main.py
